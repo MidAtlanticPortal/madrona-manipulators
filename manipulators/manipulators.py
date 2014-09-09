@@ -2,14 +2,14 @@ from django.contrib.gis.geos import GEOSGeometry, Polygon, LineString, Point, Li
 from django import forms
 # from madrona.studyregion.models import *
 from django.conf import settings
-from madrona.common.utils import LargestPolyFromMulti, LargestLineFromMulti
+# from madrona.common.utils import LargestPolyFromMulti, LargestLineFromMulti
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 # manipulatorsDict is bound to this module (won't be reinitialized if module is imported twice)
 manipulatorsDict = {}
-from elementtree.ElementTree import fromstring
+# from elementtree.ElementTree import fromstring
+from xml.etree.ElementTree import fromstring
 from django.contrib.gis.geos import LinearRing, Polygon
-from madrona.common.utils import clean_geometry, ensure_clean
 
 def simplify(geom):
     if geom.srid != settings.GEOMETRY_DB_SRID:
@@ -164,6 +164,7 @@ class BaseManipulator(object):
         return target
 
     def result(self, clipped_shape, html="", success="1"):
+        from madrona.common.utils import ensure_clean
         clipped_shape = ensure_clean(clipped_shape, settings.GEOMETRY_DB_SRID)
         return {"clipped_shape": clipped_shape, "html": html, "success": success}
 

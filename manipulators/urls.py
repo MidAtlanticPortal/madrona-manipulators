@@ -1,6 +1,6 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url
 
-urlpatterns = patterns('madrona.manipulators.views',
+urlpatterns = patterns('manipulators.views',
     (r'^test/$', 'testView'),
     (r'^list/([A-Za-z0-9_,]+)/([A-Za-z0-9_,]+)/$', 'mpaManipulatorList'),
     url(r'^([A-Za-z0-9_,]+)/$', 'multi_generic_manipulator_view', name='manipulate'),

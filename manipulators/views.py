@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from madrona.common import default_mimetypes as mimetypes
 from django.template.loader import render_to_string
 
-from madrona.manipulators.manipulators import *
+from manipulators.manipulators import *
 from django.db import models
 
 from django.contrib.gis.geos import *
