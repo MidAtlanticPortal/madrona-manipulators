@@ -1,11 +1,15 @@
-from django.contrib.gis.geos import GEOSGeometry, Polygon, LineString, Point, LinearRing, fromstr
+from __future__ import absolute_import
+from django.contrib.gis.geos import (GEOSGeometry, Polygon, LineString, Point, 
+                                     LinearRing, fromstr)
 from django import forms
 # from madrona.studyregion.models import *
 from django.conf import settings
-# from madrona.common.utils import LargestPolyFromMulti, LargestLineFromMulti
+from manipulators.geometry import (LargestLineFromMulti, LargestPolyFromMulti, 
+                                   ensure_clean)
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
-# manipulatorsDict is bound to this module (won't be reinitialized if module is imported twice)
+# manipulatorsDict is bound to this module (won't be reinitialized if module is 
+# imported twice)
 manipulatorsDict = {}
 # from elementtree.ElementTree import fromstring
 from xml.etree.ElementTree import fromstring
@@ -164,7 +168,6 @@ class BaseManipulator(object):
         return target
 
     def result(self, clipped_shape, html="", success="1"):
-        from madrona.common.utils import ensure_clean
         clipped_shape = ensure_clean(clipped_shape, settings.GEOMETRY_DB_SRID)
         return {"clipped_shape": clipped_shape, "html": html, "success": success}
 

@@ -3,6 +3,7 @@
 	<name>madrona-manipulators</name>
 	<comment></comment>
 	<projects>
+		<project>madrona-features</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
