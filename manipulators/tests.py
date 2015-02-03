@@ -1,18 +1,20 @@
 from django.test import TestCase
 from django.test.client import Client
 from django.conf import settings
-from django.conf.urls.defaults import *
 from django.contrib.gis.geos import *
-from madrona.studyregion.models import StudyRegion
-from django.core import serializers 
+# from madrona.studyregion.models import StudyRegion
+from django.core import serializers
+from features.forms import FeatureForm
 from manipulators import *      
-from madrona.features.models import Feature, PointFeature, LineFeature, PolygonFeature, FeatureCollection
-from madrona.features.forms import FeatureForm
-from madrona.features import register
-from django.contrib.auth.models import User
+from features.models import Feature, PointFeature, LineFeature, PolygonFeature, FeatureCollection
+from features.forms import FeatureForm
+from features.registry import register, workspace_json
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from django.test.utils import override_settings
 import json
 import re
+from django.db import models
 
 # set up some test manipulators
 class TestManipulator(BaseManipulator):
@@ -175,8 +177,8 @@ class TestPoly(PolygonFeature):
 
     class Options:
         verbose_name = 'Test Poly'
-        form = 'madrona.manipulators.tests.TestPolyForm'
-        manipulators = ['madrona.manipulators.manipulators.ClipToStudyRegionManipulator']
+        form = 'manipulators.tests.TestPolyForm'
+        manipulators = ['manipulators.manipulators.ClipToStudyRegionManipulator']
 class TestPolyForm(FeatureForm):
     class Meta:
         model = TestPoly
@@ -187,8 +189,8 @@ class TestOptmanip(PolygonFeature):
 
     class Options:
         verbose_name = 'Feature to Test Optional Manipulators'
-        form = 'madrona.manipulators.tests.TestOptmanipForm'
-        optional_manipulators = ['madrona.manipulators.manipulators.ClipToStudyRegionManipulator']
+        form = 'manipulators.tests.TestOptmanipForm'
+        optional_manipulators = ['manipulators.manipulators.ClipToStudyRegionManipulator']
         manipulators = []
 
 class TestOptmanipForm(FeatureForm):
@@ -202,8 +204,8 @@ class TestLine(LineFeature):
 
     class Options:
         verbose_name = 'TestLine'
-        form = 'madrona.manipulators.tests.TestLineForm'
-        manipulators = ['madrona.manipulators.manipulators.ClipToStudyRegionManipulator']
+        form = 'manipulators.tests.TestLineForm'
+        manipulators = ['manipulators.manipulators.ClipToStudyRegionManipulator']
 class TestLineForm(FeatureForm):
     class Meta:
         model = TestLine
@@ -214,8 +216,8 @@ class TestPoint(PointFeature):
 
     class Options:
         verbose_name = 'TestPoint'
-        form = 'madrona.manipulators.tests.TestPointForm'
-        manipulators = ['madrona.manipulators.manipulators.ClipToStudyRegionManipulator']
+        form = 'manipulators.tests.TestPointForm'
+        manipulators = ['manipulators.manipulators.ClipToStudyRegionManipulator']
 class TestPointForm(FeatureForm):
     class Meta:
         model = TestPoint
