@@ -9,8 +9,7 @@ from manipulators import *
 from features.models import Feature, PointFeature, LineFeature, PolygonFeature, FeatureCollection
 from features.forms import FeatureForm
 from features.registry import register, workspace_json
-from django.contrib.auth import get_user_model
-User = get_user_model()
+from django.contrib.auth.models import User
 from django.test.utils import override_settings
 import json
 import re
