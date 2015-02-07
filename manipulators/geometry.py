@@ -117,6 +117,12 @@ def clean_geometry(geom):
     # The ones that aren't directly GEOS could also be ported, i.e., 
     # https://github.com/postgis/postgis/blob/12ea21877345f20bc691716c6edd9c006471ce76/liblwgeom/lwgeom_geos.c  
     """Send a geometry to the cleanGeometry stored procedure and get the cleaned geom back."""
+    if connection.vendor == 'sqlite':
+        # Spatialite doesn't have st_geomfromewkt. It probably needs to be
+        # converted to st_geomfromtext. Spatialite is only used for testing, so
+        # just do nothing right now.
+        return geom
+
     cursor = connection.cursor()
     query = "select cleangeometry(st_geomfromewkt(\'%s\')) as geometry" % geom.ewkt
     cursor.execute(query)
