@@ -1,5 +1,5 @@
 from django.contrib.gis.geos import Polygon
-from django.db import connection
+from django.db import connection, ProgrammingError
 from django.contrib.gis.geos import fromstr
 from math import pi
 from django.conf import settings
@@ -124,8 +124,16 @@ def clean_geometry(geom):
         return geom
 
     cursor = connection.cursor()
-    query = "select cleangeometry(st_geomfromewkt(\'%s\')) as geometry" % geom.ewkt
-    cursor.execute(query)
+    try:
+        query = "select cleangeometry(st_geomfromewkt(\'%s\')) as geometry" % geom.ewkt
+        cursor.execute(query)
+    except ProgrammingError: 
+        try:
+            query = "select st_cleangeometry(st_geomfromewkt(\'%s\')) as geometry" % geom.ewkt
+            cursor.execute(query)
+        except ProgrammingError: 
+            return geom
+    
     row = cursor.fetchone()
     newgeom = fromstr(row[0])
 
