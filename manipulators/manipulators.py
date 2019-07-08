@@ -156,7 +156,7 @@ class BaseManipulator(object):
                 target = parsekml(shape)
             else:
                 target = GEOSGeometry(shape)
-        except Exception, e:
+        except Exception as e:
             raise self.InvalidGeometryException(e.message)
 
         if not target.valid:
@@ -266,7 +266,7 @@ class ClipToShapeManipulator(BaseManipulator):
         try:
             clip_against = GEOSGeometry(self.clip_against)
             clip_against.set_srid(settings.GEOMETRY_CLIENT_SRID)
-        except Exception, e:
+        except Exception as e:
             raise self.InternalException("Exception raised in ClipToShapeManipulator while initializing geometry on self.clip_against: " + e.message)
 
         if not clip_against.valid:
@@ -275,7 +275,7 @@ class ClipToShapeManipulator(BaseManipulator):
         #intersect the two geometries
         try:
             clipped_shape = target_shape.intersection(clip_against)
-        except Exception, e:
+        except Exception as e:
             raise self.InternalException("Exception raised in ClipToShapeManipulator while intersecting geometries: " + e.message)  
 
         #if there was no overlap (intersection was empty)
@@ -368,7 +368,7 @@ class DifferenceFromShapeManipulator(BaseManipulator):
         try:
             diff_geom = GEOSGeometry(self.diff_geom)
             diff_geom.set_srid(settings.GEOMETRY_CLIENT_SRID)
-        except Exception, e:
+        except Exception as e:
             raise self.InternalException("Exception raised in DifferenceFromShapeManipulator while initializing geometry on self.diff_geom: " + e.message)
 
         if not diff_geom.valid:
@@ -377,7 +377,7 @@ class DifferenceFromShapeManipulator(BaseManipulator):
         #determine the difference in the two geometries
         try:
             clipped_shape = target_shape.difference(diff_geom)
-        except Exception, e:
+        except Exception as e:
             raise self.InternalException("Exception raised in DifferenceFromShapeManipulator while intersecting geometries: " + e.message)  
 
         #if there is no geometry left (difference was empty)
@@ -451,12 +451,12 @@ class ClipToStudyRegionManipulator(BaseManipulator):
                 study_region = GEOSGeometry(self.study_region)
                 study_region.set_srid(settings.GEOMETRY_CLIENT_SRID)
                 study_region.transform(settings.GEOMETRY_DB_SRID)
-            except Exception, e:
+            except Exception as e:
                 raise self.InternalException("Exception raised in ClipToStudyRegionManipulator while initializing study region geometry: " + e.message)
         else:
             try:
                 study_region = StudyRegion.objects.current().geometry
-            except Exception, e:
+            except Exception as e:
                 raise self.InternalException("Exception raised in ClipToStudyRegionManipulator while obtaining study region geometry from database: " + e.message)    
 
         #intersect the two geometries
@@ -465,7 +465,7 @@ class ClipToStudyRegionManipulator(BaseManipulator):
             clipped_shape = target_shape.intersection(study_region)
             target_shape.transform(settings.GEOMETRY_CLIENT_SRID)
             clipped_shape.transform(settings.GEOMETRY_CLIENT_SRID)
-        except Exception, e:
+        except Exception as e:
             raise self.InternalException("Exception raised in ClipToStudyRegionManipulator while intersecting geometries: " + e.message)  
 
         out_geom = None
@@ -549,7 +549,7 @@ class ClipToGraticuleManipulator(BaseManipulator):
         #intersect the two geometries
         try:
             clipped_shape = target_shape.intersection(graticule_box)
-        except Exception, e:
+        except Exception as e:
             raise self.InternalException("Exception raised in ClipToGraticuleManipulator while intersecting geometries: " + e.message)
 
         #if there was no overlap (intersection was empty)
@@ -595,7 +595,7 @@ class ClipToGraticuleManipulator(BaseManipulator):
                                           Point(float(self.west), float(self.north))]))
                 box.set_srid(settings.GEOMETRY_CLIENT_SRID)
                 return box
-            except Exception, e:
+            except Exception as e:
                 raise self.InternalException("Exception raised in ClipToGraticuleManipulator while initializing graticule geometry: " + e.message)
 
         def __extract_dirs(self, parent):
