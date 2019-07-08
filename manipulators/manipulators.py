@@ -7,7 +7,7 @@ from django.conf import settings
 from manipulators.geometry import (LargestLineFromMulti, LargestPolyFromMulti, 
                                    ensure_clean)
 from django.template.loader import render_to_string
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 # manipulatorsDict is bound to this module (won't be reinitialized if module is 
 # imported twice)
 manipulatorsDict = {}
