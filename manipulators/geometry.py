@@ -4,11 +4,11 @@ from django.contrib.gis.geos import fromstr
 from math import pi
 from django.conf import settings
 
-def LargestPolyFromMulti(geom): 
+def LargestPolyFromMulti(geom):
     """ takes a polygon or a multipolygon geometry and returns only the largest polygon geometry"""
     if geom.num_geom > 1:
         largest_area = 0.0
-        for g in geom: # find the largest polygon in the multi polygon 
+        for g in geom: # find the largest polygon in the multi polygon
             if g.area > largest_area:
                 largest_geom = g
                 largest_area = g.area
@@ -27,7 +27,7 @@ def LargestLineFromMulti(geom):
                 largest_length = g.length
     else:
         largest_geom = geom
-    return largest_geom  
+    return largest_geom
 
 
 def angle(pnt1,pnt2,pnt3):
@@ -39,7 +39,7 @@ def angle(pnt1,pnt2,pnt3):
         query = "SELECT abs(ST_Azimuth(ST_PointFromText(\'%s\',%i), ST_PointFromText(\'%s\',%i) ) - ST_Azimuth(ST_PointFromText(\'%s\',%i), ST_PointFromText(\'%s\',%i)) )" % (pnt2.wkt,pnt2.srid,pnt1.wkt,pnt1.srid,pnt2.wkt,pnt2.srid,pnt3.wkt,pnt3.srid)
     else:
         query = "SELECT abs(ST_Azimuth(ST_PointFromText(\'%s\'), ST_PointFromText(\'%s\') ) - ST_Azimuth(ST_PointFromText(\'%s\'), ST_PointFromText(\'%s\')) )" % (pnt2.wkt,pnt1.wkt,pnt2.wkt,pnt3.wkt)
-    #print query
+    #print(query)
     cursor.execute(query)
     row = cursor.fetchone()
     return row[0]
@@ -108,14 +108,14 @@ def remove_spikes(poly,threshold=0.01):
     return poly
 def clean_geometry(geom):
     # TODO:
-    # There are updated versions of the cleangeometry.sql code. Update it. 
+    # There are updated versions of the cleangeometry.sql code. Update it.
     # Also, there's no particular reason why cleangeometry() can't be written
-    # as a python function (which would remove the dependency on installing a 
-    # custom function in the database). 
+    # as a python function (which would remove the dependency on installing a
+    # custom function in the database).
     # All of the used postgis functions use GEOS as far as I can tell, and we
-    # have a full GEOS api. 
-    # The ones that aren't directly GEOS could also be ported, i.e., 
-    # https://github.com/postgis/postgis/blob/12ea21877345f20bc691716c6edd9c006471ce76/liblwgeom/lwgeom_geos.c  
+    # have a full GEOS api.
+    # The ones that aren't directly GEOS could also be ported, i.e.,
+    # https://github.com/postgis/postgis/blob/12ea21877345f20bc691716c6edd9c006471ce76/liblwgeom/lwgeom_geos.c
     """Send a geometry to the cleanGeometry stored procedure and get the cleaned geom back."""
     if connection.vendor == 'sqlite':
         # Spatialite doesn't have st_geomfromewkt. It probably needs to be
@@ -127,13 +127,13 @@ def clean_geometry(geom):
     try:
         query = "select cleangeometry(st_geomfromewkt(\'%s\')) as geometry" % geom.ewkt
         cursor.execute(query)
-    except ProgrammingError: 
+    except ProgrammingError:
         try:
             query = "select st_cleangeometry(st_geomfromewkt(\'%s\')) as geometry" % geom.ewkt
             cursor.execute(query)
-        except ProgrammingError: 
+        except ProgrammingError:
             return geom
-    
+
     row = cursor.fetchone()
     newgeom = fromstr(row[0])
 
@@ -149,9 +149,9 @@ def clean_geometry(geom):
         return geometry
 
 
-# transforms the geometry to the given srid, checks it's validity and 
+# transforms the geometry to the given srid, checks it's validity and
 # cleans it if necessary, transforms it back into the original srid and
-# cleans again if needed before returning 
+# cleans again if needed before returning
 # Note, it does not scrub the geometry before transforming, so if needed
 # call check_validity(geo, geo.srid) first.
 def ensure_clean(geo, srid):
@@ -186,7 +186,7 @@ def ComputeLookAt(geometry):
     center_lon = trans_geom.centroid.y
     center_lat = trans_geom.centroid.x
 
-    lngSpan = (Point(w, center_lat)).distance(Point(e, center_lat)) 
+    lngSpan = (Point(w, center_lat)).distance(Point(e, center_lat))
     latSpan = (Point(center_lon, n)).distance(Point(center_lon, s))
 
     aspectRatio = 1.0
@@ -215,7 +215,7 @@ def ComputeLookAt(geometry):
     lookAtParams['heading'] = 0
 
     return lookAtParams
-    
+
 def isCCW(ring):
     """
     Determines if a LinearRing is oriented counter-clockwise or not

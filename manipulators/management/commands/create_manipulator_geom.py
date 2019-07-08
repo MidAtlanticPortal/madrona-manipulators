@@ -26,11 +26,11 @@ class Command(BaseCommand):
             raise Exception("Data source should only contain a single layer. Aborting.")
 
         layer = ds[0]
-        if len(layer) != 1: 
+        if len(layer) != 1:
             raise Exception("Layer should containing ONLY a single feature")
 
         if not 'polygon' in layer.geom_type.name.lower():
-            print layer.geom_type.name
+            print(layer.geom_type.name)
             raise Exception("This geometry must be a polygon")
 
         mapping = {'geometry': 'MULTIPOLYGON'}
@@ -45,8 +45,8 @@ class Command(BaseCommand):
             manip_geom.name = layer.name
             manip_geom.save()
 
-        print ""
-        print "The manipulaotr geometry, %s, has been added to the %s model with primary key = %s" % (manip_geom.name, manipulator, manip_geom.pk)
+        print("")
+        print("The manipulaotr geometry, %s, has been added to the %s model with primary key = %s" % (manip_geom.name, manipulator, manip_geom.pk))
 
-        print "To switch to this geometry, you will need to run 'manage.py change_manipulator_geom %s %s'" % (manip_geom.pk, manipulator)
-        print ""
+        print("To switch to this geometry, you will need to run 'manage.py change_manipulator_geom %s %s'" % (manip_geom.pk, manipulator))
+        print("")
