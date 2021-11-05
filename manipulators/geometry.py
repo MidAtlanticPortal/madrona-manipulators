@@ -143,8 +143,8 @@ def clean_geometry(geom):
     else:
         geometry = newgeom
 
-    if not geometry.valid or (geometry.geom_type != 'Point' and geometry.num_coords < 2):
-        raise Exception("I can't clean this geometry. Dirty, filthy geometry. This geometry should be ashamed.")
+    if not geometry.valid:
+        raise Exception("Unable to clean this geometry feature.")
     else:
         return geometry
 

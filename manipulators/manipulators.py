@@ -167,6 +167,8 @@ class BaseManipulator(object):
         target.srid = settings.GEOMETRY_CLIENT_SRID
         return target
 
+    # TODO: The shape has not necessarily been clipped (NullManipulator). Rename
+    #       this variable, and see about replacing the dict key.
     def result(self, clipped_shape, html="", success="1"):
         clipped_shape = ensure_clean(clipped_shape, settings.GEOMETRY_DB_SRID)
         return {"clipped_shape": clipped_shape, "html": html, "success": success}
